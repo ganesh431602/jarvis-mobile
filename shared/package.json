@@ -2,7 +2,6 @@
   "name": "@jarvis/shared",
   "private": true,
   "type": "module",
-  "scripts": {
-    "typecheck": "tsc --noEmit"
-  }
+  "exports": { ".": "./index.ts", "./contracts": "./contracts/index.ts", "./enums": "./enums/index.ts", "./types": "./types/security.ts", "./validation": "./validation/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit" }
 }
