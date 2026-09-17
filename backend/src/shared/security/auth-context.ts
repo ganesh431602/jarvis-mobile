@@ -7,10 +7,10 @@ export interface AuthContext {
   readonly role?: string;
   readonly sessionId?: string;
   readonly requestId: string;
+  readonly correlationId?: string;
 }
 
 export type AuthenticatedRequest = Request & { readonly authContext?: AuthContext };
-
 export const getAuthContext = (request: AuthenticatedRequest): AuthContext | undefined => request.authContext;
 export type Authenticator = (request: Request) => Promise<AuthContext | undefined>;
 export type AuthScope = ResourceScope;
