@@ -1,0 +1,1 @@
+export const SecuritySummary = ({ lockState }: { lockState?: string }): JSX.Element => <section className="surface"><p className="eyebrow">Security</p><h2>{lockState ? `Lock state: ${lockState}` : "Security state unavailable"}</h2><p className="muted">Decisions remain authoritative on the backend.</p><a className="text-link" href="/security">Open Security Center</a></section>;

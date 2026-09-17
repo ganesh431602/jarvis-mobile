@@ -1,1 +1,47 @@
-export const Dashboard = (): JSX.Element => <div className="dashboard"><div className="page-heading"><div><p className="eyebrow">Overview</p><h1>Command center</h1><p className="muted">A calm view of what is happening, what needs attention, and what is safe to do next.</p></div><span className="status-badge status-safe"><span className="status-dot" />System nominal</span></div><div className="dashboard-grid"><section className="surface hero-panel"><div><p className="eyebrow">System status</p><h2>Ready for direction</h2><p className="muted">Live operational data will appear here once the backend connection is enabled.</p></div><div className="hero-rule" /><div className="hero-meta"><span>Connection</span><strong>Not connected</strong></div></section><section className="surface attention-panel"><p className="eyebrow">Requires attention</p><h2>Nothing to review</h2><p className="muted">Pending approvals and task signals will be shown here.</p><button className="button button-secondary" disabled>View approvals</button></section><section className="surface metric-panel"><p className="eyebrow">Agents</p><strong className="metric-value">—</strong><p className="muted">Awaiting backend data</p></section><section className="surface metric-panel"><p className="eyebrow">Tasks in motion</p><strong className="metric-value">—</strong><p className="muted">Awaiting backend data</p></section><section className="surface activity-panel"><div className="section-heading"><div><p className="eyebrow">Activity</p><h2>Recent movement</h2></div><span className="muted">Unavailable</span></div><div className="empty-state"><span className="empty-line" /><p>No activity to display yet.</p></div></section><section className="surface ai-panel"><p className="eyebrow">Intelligence usage</p><h2>Not connected</h2><p className="muted">Usage and cost reporting will become available when a provider is configured.</p></section></div></div>;
+import { useEffect, useState } from "react";
+import { apiClient, ApiClientError } from "../../services/api-client.js";
+import { DashboardHeader } from "./DashboardHeader.js";
+import { SystemStatus } from "./SystemStatus.js";
+import { AttentionPanel } from "./AttentionPanel.js";
+import { OperationalSummary } from "./OperationalSummary.js";
+import { AgentActivity } from "./AgentActivity.js";
+import { TaskSummary } from "./TaskSummary.js";
+import { SecuritySummary } from "./SecuritySummary.js";
+import { RecentActivity } from "./RecentActivity.js";
+import { AIUsageSummary } from "./AIUsageSummary.js";
+import { QuickActions } from "./QuickActions.js";
+
+export interface DashboardData {
+  readonly systemStatus?: "Operational" | "Degraded" | "Unavailable";
+  readonly activeAgents?: number;
+  readonly pendingApprovals?: number;
+  readonly tasks?: { readonly todo?: number; readonly inProgress?: number; readonly waitingApproval?: number; readonly failed?: number };
+  readonly lockState?: "ACTIVE" | "INACTIVE";
+  readonly recentActivity?: readonly { readonly timestamp: string; readonly actor: string; readonly action: string; readonly result: string }[];
+}
+
+type LoadState = { status: "loading" } | { status: "ready"; data: DashboardData } | { status: "unavailable"; message: string } | { status: "error"; message: string };
+
+export const Dashboard = (): JSX.Element => {
+  const [state, setState] = useState<LoadState>({ status: "loading" });
+  const load = async () => {
+    setState({ status: "loading" });
+    try { setState({ status: "ready", data: await apiClient<DashboardData>("/dashboard") }); }
+    catch (error) {
+      const message = error instanceof ApiClientError && error.status >= 500 ? "Dashboard data is temporarily unavailable." : "Dashboard data is not connected yet.";
+      setState({ status: "unavailable", message });
+    }
+  };
+  useEffect(() => { void load(); }, []);
+  return <div className="dashboard"><DashboardHeader onRefresh={load} loading={state.status === "loading"} />{state.status === "loading" ? <DashboardSkeleton /> : state.status === "error" ? <ErrorState message={state.message} onRetry={load} /> : state.status === "unavailable" ? <UnavailableState message={state.message} /> : <DashboardContent data={state.data} />}</div>;
+};
+
+const DashboardContent = ({ data }: { data: DashboardData }): JSX.Element => <>
+  <div className="dashboard-primary"><SystemStatus status={data.systemStatus} /><AttentionPanel approvals={data.pendingApprovals} failed={data.tasks?.failed} /><OperationalSummary data={data} /></div>
+  <div className="dashboard-secondary"><TaskSummary tasks={data.tasks} /><AgentActivity count={data.activeAgents} /><SecuritySummary lockState={data.lockState} /><RecentActivity events={data.recentActivity} /><AIUsageSummary /></div>
+  <QuickActions />
+</>;
+
+const DashboardSkeleton = (): JSX.Element => <div className="dashboard-loading" aria-label="Loading dashboard" aria-busy="true"><span className="skeleton skeleton-wide" /><div className="skeleton-grid"><span className="skeleton" /><span className="skeleton" /><span className="skeleton" /></div><span className="skeleton skeleton-large" /></div>;
+const UnavailableState = ({ message }: { message: string }): JSX.Element => <div className="state-panel"><p className="eyebrow">Dashboard</p><h2>Data unavailable</h2><p className="muted">{message}</p></div>;
+const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }): JSX.Element => <div className="state-panel state-error"><p className="eyebrow">Dashboard</p><h2>We couldn't load this view</h2><p className="muted">{message}</p><button className="button button-secondary" onClick={onRetry}>Try again</button></div>;
