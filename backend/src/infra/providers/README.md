@@ -1,3 +1,3 @@
 # Provider boundary
 
-Future AI and external-provider interfaces only. No provider calls, OAuth, credentials, or integrations are implemented in Phase 1.
+Provider interfaces isolate future AI and external-provider implementations. Providers must be injected into services and must not expose credentials, tokens, or SDK-specific types through domain contracts.
