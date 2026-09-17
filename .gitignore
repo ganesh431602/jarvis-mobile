@@ -1,0 +1,23 @@
+# Existing Android/Gradle outputs
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+.kotlin/
+captures/
+*.apk
+*.keystore
+!app/debug.keystore
+
+# JavaScript/TypeScript outputs and local state
+node_modules/
+dist/
+coverage/
+.npm/
+*.tsbuildinfo
+
+# Local environment files
+.env
+.env.*
+!.env.example

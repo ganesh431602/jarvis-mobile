@@ -1,0 +1,8 @@
+{
+  "name": "jarvis-mobile-workspace",
+  "private": true,
+  "workspaces": ["frontend", "backend", "shared"],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
