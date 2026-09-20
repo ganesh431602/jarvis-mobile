@@ -1,73 +1,64 @@
 # JARVIS Product Requirements Document
 
-## Product
+## Product vision
 
-**JARVIS** is a modular, mobile-first AI Business Operating System: a professional executive operating system and personal AI assistant for business operations, tasks, clients, communications, finance visibility, security, approvals, and future AI-powered automation.
+JARVIS is a modular, mobile-first AI Business Operating System for founders, operators, and small businesses. It unifies business operations, tasks, clients, communications, financial visibility, security, approvals, and future AI-assisted execution while keeping humans in control of consequential actions.
 
-## Problem
+## Users and use cases
 
-Business work is fragmented across operations, tasks, clients, communications, financial visibility, integrations, and disconnected AI tools. JARVIS is intended to unify that work while keeping humans in control of consequential actions. It must provide useful context and execution assistance without fabricating data or silently taking high-risk actions.
+| User | Primary use |
+|---|---|
+| Owner / founder | See business state, manage work, approve risk, configure policy |
+| Admin | Administer authorized users and operational configuration |
+| Operator | Execute permitted workflows within assigned scope |
+| Viewer | Read permitted operational information |
+| AI agent | Independent system actor with explicit identity, scope, permissions, and risk ceiling; never a human user |
 
-## Target users
+## Core modules
 
-- **Primary:** founder/business owner, solo entrepreneur, small-business operator, and executive/operator managing multiple workflows.
-- **Secondary:** authorized administrators, operators, and view-only users.
-- **System actors:** AI agents are independent system actors, not human users. They do not inherit human OWNER or ADMIN authority.
+**Core:** Auth, Dashboard, Tasks, Clients, Agents, Approvals, Security, Audit.
+
+**Operations:** Communications, Content, Finance, Integrations.
+
+**AI:** Orchestrator, Memory, Tool Gateway, Voice, Agent Registry.
 
 ## Product principles
 
-1. Human-controlled and security-first.
-2. Action-oriented, modular, mobile-first, and desktop-capable.
-3. AI is functionality, not decoration.
-4. No fabricated data.
-5. Consequential actions require explicit approval.
-6. Behavior is observable and auditable.
-7. Architecture is provider-agnostic.
+- Human-controlled, security-first, action-oriented, modular, mobile-first, and desktop-capable.
+- AI is functionality, not decoration.
+- No fabricated data; real, unavailable, empty, loading, and error states remain distinct.
+- Consequential actions require explicit approval unless an explicit policy permits otherwise.
+- Behavior is observable, auditable, and provider-agnostic.
 
-## Phase 1 MVP scope
+## MVP requirements
 
-| Capability | Phase 1 expectation |
-|---|---|
-| Authentication foundation | Foundation and boundaries for identity and sessions |
-| Dashboard | Read-oriented operational summary |
-| Security Center | Security state, controls, and emergency lock surface |
-| Permission model | Roles, permissions, scopes, and risk ceilings |
-| Approval Center | Review and decision workflow for consequential actions |
-| Audit Log | Append-only activity and security record |
-| Agent Registry | Registry for the 13 placeholder agents |
-| Task System | Task foundation and lifecycle |
-| Client foundation | Client records and foundations for client workflows |
-| Integration Center | Integration inventory and connection-state foundation |
-| Finance foundation | Visibility foundations only; no money movement |
-| AI usage foundation | Usage visibility and provider-agnostic boundaries |
-| Configuration | Product and account configuration surfaces |
-| Security controls | Locking, policy, and protective controls |
-| Responsive UI | Mobile-first behavior with desktop-capable layouts |
-| Documentation | Source-of-truth engineering and product documents |
-| Copilot instructions | Guidance for safe, scoped AI-assisted development |
+1. Authentication foundation and session boundaries.
+2. Read-oriented dashboard.
+3. Security Center with security state and emergency LOCK ALL controls.
+4. Roles, permissions, resource scopes, and agent risk ceilings.
+5. Approval Center for consequential actions.
+6. Append-only Audit Log.
+7. Agent Registry for the planned agents.
+8. Task and Client foundations.
+9. Integration inventory and Finance visibility foundations.
+10. AI usage visibility and configuration foundations.
+11. Responsive mobile-first UI, with polished desktop behavior.
+12. Source-of-truth documentation and AI coding guidance.
 
-The repository snapshot inspected for this documentation contains `README.md` only. The implementation status above is the intended/project-record scope; implementation claims must be verified against the repository before being relied upon.
+## Agent registry
 
-## Placeholder agents
+The planned registry contains CEO/Orchestrator, Business, Client, Developer, QA, Sales, Finance, Email, Content, Creator Revenue, Portfolio, Security, and Analytics. Registry presence is not proof of autonomous execution: an entry may be a placeholder identity or capability boundary.
 
-The Phase 1 registry contains these 13 placeholder agents: CEO / Orchestrator, Business, Client, Developer, QA, Sales, Finance, Email, Content, Creator Revenue, Portfolio, Security, and Analytics.
+## Current, planned, and future
 
-A placeholder agent is an identity, registry entry, or capability boundary—not proof that autonomous execution exists. Implemented foundation, placeholder capability, future capability, and intentionally absent capability must remain distinct in UI and documentation.
+- **Current:** The recorded project history identifies completed foundation, shared contracts, backend, adapter, security, agent/task, client/dashboard, frontend shell, and dashboard batches. Existing implementation is authoritative; documentation must not upgrade a placeholder into a completed feature.
+- **Planned:** Dashboard polish, informational and operational modules, hardening, verification, and production boundaries listed in `IMPLEMENTATION_PLAN.md`.
+- **Future:** Real provider-backed AI execution, external integrations, scheduler, multi-agent workflows, production authentication/database, and voice.
 
-- **Implemented foundation:** contracts, boundaries, registry/task/security foundations only where present and verified in the repository.
-- **Placeholder capability:** agent identities and safe metadata that can be displayed or configured without claiming execution.
-- **Future capability:** provider-backed tools, real integrations, and approved automation planned for later phases.
-- **Intentionally not implemented:** high-risk autonomous actions, credentials, money movement, and production voice in Phase 1.
+Unless verified in source, real AI execution, payments or transfers, OAuth integrations, and voice are not implemented. Finance excludes bank login, UPI PIN, ATM PIN, OTP handling, credentials, and automatic money transfer. High-risk autonomous actions are excluded from the MVP.
 
-## Explicit Phase 1 exclusions
+## Non-functional requirements
 
-Phase 1 does **not** include real financial transfers, UPI PIN, ATM PIN, OTP handling, bank credentials, real OAuth integrations, real AI-provider execution, autonomous high-risk actions, or production voice implementation.
+Security and least privilege are authoritative. APIs are typed and observable. Sensitive actions are auditable and approval-gated. UI is accessible, responsive, and honest about data state. Deployments must be reproducible, errors safe for users, and provider dependencies isolated behind adapters.
 
-## Success criteria
-
-- Users can understand operational state without invented metrics.
-- Consequential actions are denied or held for scoped approval.
-- Security state and audit history are observable.
-- Agents are useful as bounded system actors, never as implicit owners.
-- UI states distinguish loading, unavailable, empty, and error.
-- Each delivery is small, verifiable, and documented.
+See `TRD.md`, `ARCHITECTURE.md`, `RULES.md`, and `DATABASE_SCHEMA.md` for technical constraints.

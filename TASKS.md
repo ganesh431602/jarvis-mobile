@@ -1,34 +1,28 @@
-# JARVIS Execution Plan
+# JARVIS Task Register
 
-Statuses: `DONE`, `IN_PROGRESS`, `BLOCKED`, `PLANNED`. Each batch is intentionally small so an AI agent cannot attempt the entire project in one prompt.
+Statuses: `TODO`, `IN_PROGRESS`, `WAITING_APPROVAL`, `COMPLETED`, `FAILED`, `CANCELLED`.
 
-## Recorded batches
+| ID | Phase | Module | Task | Status | Priority | Dependencies | Notes |
+|---|---|---|---|---|---|---|---|
+| B1 | Foundation | Docs | Foundation and documentation | COMPLETED | High | None | Recorded history |
+| B2 | Contracts | Shared | Shared contracts | COMPLETED | High | B1 | Recorded history |
+| B3 | Backend | API | Backend foundation | COMPLETED | High | B2 | Recorded history |
+| B4 | Data boundary | Supabase | Adapter boundary | COMPLETED | High | B3 | Supabase is not business logic |
+| B5 | Security | Policy | Security foundation | COMPLETED | Critical | B3/B4 | Default deny/fail closed |
+| B6 | Core | Agents/Tasks | Agent and task foundation | COMPLETED | High | B2/B5 | Registry does not imply autonomy |
+| B7 | Core | Clients/Dashboard | Client and dashboard foundation | COMPLETED | High | B3/B5/B6 | Dashboard is read-oriented |
+| B8 | Frontend | Shell | Responsive frontend shell | COMPLETED | High | B2/B7 | Preserve existing implementation |
+| B9A | Frontend | Dashboard | Dashboard | COMPLETED | High | B8 | Recorded typecheck/build PASS |
+| B9A.1 | Polish | Dashboard | Visual and responsive polish | TODO | Medium | B9A | No source changes in this documentation batch |
+| B9B | Informational | Security/Agents/Integrations | Informational module states | TODO | High | B9A | Must not fabricate data |
+| B10 | Operations | Tasks/Clients/Approvals | Operational workflows | TODO | High | B9B/B5 | Approval and audit required |
+| B11 | Verification | CI | Typecheck/build/integration verification | TODO | High | B10 | Reproducible checks |
+| B12 | Auth | Authentication | Production authentication | TODO | Critical | B5/B11 | Provider remains open |
+| B13 | Data | Database | Production database integration | TODO | Critical | B4/B11 | Schema is planned only |
+| B14 | Integrations | Providers | Authorized real integrations | TODO | High | B11/B13 | OAuth/credentials not implemented |
+| B15 | AI | Tools/Agents | Real agent/tool execution | TODO | Critical | B5/B10/B14 | External allowlist and approval |
+| B16 | Automation | Scheduler | Policy-aware scheduler | TODO | High | B15 | Idempotency and lock checks |
+| B17 | AI | Multi-agent | Bounded multi-agent workflows | TODO | High | B15/B16 | No privilege inheritance |
+| B18 | Voice | Voice | Future voice gateway and conversation | TODO | Medium | B5/B15 | Do not implement voice now |
 
-| ID | Title | Objective | Dependencies | Expected scope | Acceptance criteria | Status |
-|---|---|---|---|---|---|---|
-| BATCH-01 | Foundation | Establish project foundations | None | Repository/app foundations | Foundation exists and is documented | DONE |
-| BATCH-02 | Shared Contracts | Define typed cross-layer contracts | BATCH-01 | Shared contract modules | Contracts are typed and consumed consistently | DONE |
-| BATCH-03 | Backend Foundation | Establish Node/TypeScript/Express backend boundaries | BATCH-02 | Backend app and domain foundations | Backend starts/builds according to repository scripts | DONE |
-| BATCH-04 | Supabase Adapter Boundary | Isolate platform/data adapter concerns | BATCH-03 | Provider/repository adapter boundary | Supabase does not contain business logic | DONE |
-| BATCH-05 | Security Foundation | Establish identity, policy, permissions, lock, and audit foundations | BATCH-03/04 | Backend security modules | Default-deny and fail-closed rules are represented | DONE |
-| BATCH-06 | Agents + Tasks | Establish agent registry and task foundation | BATCH-02/05 | Agents/tasks domains | Placeholder agents are not presented as autonomous execution | DONE |
-| BATCH-07 | Clients + Dashboard Backend | Establish client and read-oriented dashboard foundations | BATCH-03/05/06 | Client/dashboard backend modules | Dashboard reads backend data without fabrication | DONE |
-| BATCH-08 | Frontend Shell | Establish responsive frontend shell | BATCH-02/07 | Frontend app/layout/navigation | Mobile and desktop shells follow design rules | DONE |
-| BATCH-09A | Dashboard | Deliver dashboard UI | BATCH-08 | Dashboard feature and styles | TypeScript typecheck PASS; Vite production build PASS | DONE |
-
-The statuses above are the recorded project plan supplied for this repository. The inspected current snapshot contains only `README.md`, so implementation files and historical verification cannot be independently revalidated from that snapshot. Do not use this note to invent or backfill missing implementation.
-
-## Next planned batches
-
-| ID | Title | Objective | Dependencies | Expected scope | Acceptance criteria | Status |
-|---|---|---|---|---|---|---|
-| BATCH-09B | Informational modules | Add safe informational views and explicit data states | BATCH-09A | Read-oriented security, permissions, agent, and integration surfaces | Loading/unavailable/empty/error states are accurate; typecheck/build pass | PLANNED |
-| BATCH-10 | Operational modules | Add bounded operational workflows | BATCH-09B, security foundation | Tasks, clients, approvals, and configuration UI | Consequential actions are approval-gated and audited | PLANNED |
-| BATCH-11 | CI/integration verification | Automate typecheck, build, and integration checks | BATCH-10 | CI and verification configuration | Checks run reproducibly without new undocumented dependencies | PLANNED |
-| FUTURE-VOICE | Voice architecture | Design, not production implementation, for voice gateway and conversation service | Security/policy contracts | Architecture and threat model only | Languages, interruption, latency, and approval boundaries documented | PLANNED |
-| FUTURE-INTEGRATIONS | Real integrations | Add provider adapters for approved external services | BATCH-11, provider decisions | OAuth/provider adapters | Secrets isolated; scopes and revoke behavior tested | PLANNED |
-| FUTURE-AI-TOOLS | AI/tool execution | Enable bounded provider-backed AI and tools | Security, approvals, integrations | Orchestration and tool gateway | AI cannot self-authorize; high/critical actions require approval | PLANNED |
-| FUTURE-AUTH | Production authentication | Select and integrate production identity provider | Architecture decision | Auth adapter and session policy | Identity lifecycle and recovery are documented and tested | PLANNED |
-| FUTURE-DATABASE | Production database integration | Select and integrate production persistence | Adapter boundary, deployment decision | Database repositories/migrations | Data access remains behind backend interfaces | PLANNED |
-
-Every future task must include ID, title, objective, scope, dependencies, expected files/modules, acceptance criteria, and status before implementation begins.
+Every new task requires a small scope, dependencies, expected files, acceptance criteria, and an explicit status transition.

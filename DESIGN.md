@@ -2,59 +2,32 @@
 
 ## Direction
 
-JARVIS follows a **Quiet Luxury AI OS** direction: a deep charcoal/near-black foundation, off-white typography, restrained accent, thin borders, subtle surfaces, generous spacing, restrained rounded corners, minimal icons, realistic data density, professional charts/tables, calm motion, and accessible contrast.
+JARVIS is a **Quiet Luxury AI OS**. The current Vercel Dashboard redesign is a reference for interaction quality, hierarchy, spacing, navigation, and professional dashboard behavior only. Do not copy Vercel branding, colors, wording, layouts, or proprietary components.
 
-The current Vercel Dashboard redesign is a reference for interaction quality, information hierarchy, spacing, navigation patterns, and professional dashboard behavior only. Do not copy Vercel branding, logo, proprietary colors, exact layouts, wording, or proprietary components. AI should feel like functionality, not decoration.
+Use a deep charcoal/near-black base, off-white typography, one restrained accent, thin borders, soft surfaces, generous spacing, restrained rounded cards, minimal icons, realistic information density, and professional charts/tables. Avoid cyberpunk, neon, robot graphics, excessive gradients/glass, floating AI orbs, and decorative AI labels. AI is functionality, not decoration.
 
-Avoid cyberpunk styling, neon everywhere, excessive gradients/glassmorphism, floating AI orbs, robot graphics, generic SaaS templates, excessive rounded cards, and decorative “AI powered” labels.
-
-## Typography
-
-Use an existing project font if one is established; otherwise use a professional system/web-safe stack such as `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`. Define tokens for display, page title, section heading, body, metadata, labels, numbers, and tables. Numbers should use stable tabular figures where comparison matters. Hierarchy must come from size, weight, spacing, and contrast—not decoration.
-
-## Semantic color tokens
-
-Use semantic tokens rather than component-level hardcoded colors:
-
-| Token | Meaning |
-|---|---|
-| `background` | App foundation |
-| `surface` | Primary panel |
-| `surface-elevated` | Modal/popover/emphasized panel |
-| `border` | Dividers and control edges |
-| `text-primary` | Main content |
-| `text-secondary` | Supporting content |
-| `text-muted` | Metadata and disabled context |
-| `accent` | Focus and primary action |
-| `success` / `warning` / `danger` / `info` | Semantic states |
-
-Dark mode must retain readable contrast and must not rely on color alone.
-
-## Layout and motion
+## Tokens and layout
 
 - Use an 8px spacing system.
-- Prefer restrained radius values: small control radius, medium panel radius, and avoid pill-shaped everything.
-- Use 150–250ms transitions for micro-interactions.
-- Avoid excessive animation and respect `prefers-reduced-motion`.
+- Define semantic background, surface, elevated-surface, border, primary/secondary/muted text, accent, success, warning, danger, and info tokens.
+- Prefer an established project font; otherwise use a system/web-safe stack such as `Inter, ui-sans-serif, system-ui, sans-serif`.
+- Use restrained radius values rather than pill-shaped everything.
+- Use 150–250ms micro-interactions; respect `prefers-reduced-motion`.
 
-## Component behavior
+## Components and states
 
-- **Buttons:** clear hierarchy, disabled/loading states, keyboard support, and explicit destructive confirmation.
-- **Inputs:** labels, validation, help text, error state, and visible focus.
-- **Cards:** meaningful grouping; do not turn every fact into a card.
-- **Tables:** aligned columns, responsive prioritization, empty/loading/error states, and accessible headers.
-- **Badges:** semantic, concise, and not the sole status signal.
-- **Navigation:** predictable active state, mobile bottom navigation where appropriate, desktop persistent navigation.
-- **Modals/drawers:** focus trap, escape behavior, clear close action, and destructive confirmation.
-- **Alerts:** distinguish warning, error, and informational unavailable states.
-- **Skeletons:** match real content shape; never imply data exists.
-- **Empty/unavailable/error states:** follow the state rules in `RULES.md`.
-- **Confirmation dialogs:** summarize action, resource, risk, parameters, and approval requirement before commit.
+Buttons, inputs, cards, tables, badges, navigation, modals, drawers, alerts, skeletons, empty states, unavailable states, errors, disabled, focus, pressed, and hover states must be intentional and accessible. Confirmation dialogs summarize action, target, risk, parameters, and approval requirement. Skeletons match real content and never imply fake data.
+
+Every async view distinguishes LOADING, EMPTY, UNAVAILABLE, ERROR, and loaded states. Preserve loaded data when a refresh fails.
 
 ## Responsive behavior
 
-**Mobile:** bottom navigation where appropriate, touch-friendly controls, compact hierarchy, prioritized content, and safe overflow. **Desktop:** persistent navigation, denser operational views, and multi-column layouts where useful. Desktop must not simply stretch the mobile layout.
+Mobile uses touch-friendly controls, compact hierarchy, and bottom navigation where appropriate. Desktop uses persistent navigation, denser operational views, and multi-column layouts where useful. Desktop must not simply stretch mobile.
 
 ## Accessibility
 
-Provide keyboard navigation, visible focus, sufficient contrast, semantic HTML, screen-reader labels, touch targets of at least 44×44 CSS pixels where practical, and reduced-motion support. Never encode meaning by color alone.
+Use semantic HTML, keyboard navigation, visible focus, screen-reader labels, sufficient contrast, status text not conveyed by color alone, and practical 44px touch targets. Destructive actions require clear confirmation.
+
+## Future voice UI
+
+Voice UI should expose listening, processing, speaking, interruption, permission, network, and approval states without decorative anthropomorphism. Show transcript and action proposal clearly; never hide consequential intent behind voice-only interaction.

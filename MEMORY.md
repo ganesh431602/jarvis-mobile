@@ -1,79 +1,37 @@
-# JARVIS Engineering Memory
+# JARVIS Durable Project Memory
 
-## Current State
+## LOCKED
 
-JARVIS is a modular AI Business OS foundation.
+- JARVIS is a modular, mobile-first AI Business OS.
+- Backend authorization is authoritative; default deny and least privilege apply.
+- AI cannot authorize itself.
+- Agents have independent identity and never inherit Owner/Admin privileges.
+- High/Critical actions require approval unless explicit policy permits otherwise.
+- Unknown risk becomes Critical.
+- LOCK ALL blocks side effects and fails closed.
+- Frontend never accesses the database directly.
+- Provider SDKs stay behind adapters; Supabase is not business logic.
+- Audit is append-only.
+- Android/Kotlin remains isolated and untouched by web batches.
+- No fabricated data; dashboard is read-oriented.
+- Quiet Luxury AI OS is the visual direction.
 
-Frontend:
-- React + TypeScript + Vite
-- responsive shell
-- dashboard implemented
-- dashboard build verified
+## CURRENT
 
-Backend:
-- Node + TypeScript + Express
-- security foundation
-- agent/task/client/dashboard foundations
+Recorded completed history: foundation/docs, shared contracts, backend foundation, Supabase adapter boundary, security foundation, agent/task, clients/dashboard, frontend shell, and dashboard (9A). Existing source is authoritative; documentation must not imply more than source verifies. The repository already contains root governance files from earlier documentation work; this batch adds the missing planning documents and aligns the set with the requested responsibilities.
 
-Android:
-- existing Kotlin/Jetpack Compose application
-- must remain isolated and untouched by web implementation batches
+## PROPOSED
 
-The inspected repository snapshot currently contains only `README.md`; the state above is the recorded project memory and must be verified against the working tree before implementation claims are repeated.
+Planned domain model is documented in `DATABASE_SCHEMA.md`. Future tool registry, scheduler, repository implementations, provider adapters, and production verification should follow `TRD.md` and `ARCHITECTURE.md`.
 
-## Architecture Decisions
+## FUTURE
 
-1. Feature-based frontend architecture.
-2. No frontend/pages architecture.
-3. Backend domain modules under `backend/src/modules` when present in the actual tree.
-4. No separate backend/agents layer.
-5. Agents belong to the agents domain.
-6. Dashboard is read-oriented.
-7. Audit is append-only.
-8. Security is authoritative.
-9. Permissions are separate from cross-cutting security.
-10. Provider SDKs are isolated behind adapters.
-11. Supabase is not business logic.
-12. Frontend never accesses the database directly.
-13. AI cannot authorize itself.
-14. High/critical actions require approval.
-15. Emergency LOCK ALL fails closed.
-16. Agents never inherit human owner/admin privileges.
-17. Secrets never enter frontend/logs/Git.
-18. Unknown risk becomes CRITICAL.
-19. No fabricated dashboard data.
-20. Android remains untouched.
+Real authentication, database integration, OAuth/integrations, provider-backed AI execution, scheduler, multi-agent workflows, and voice. Finance remains visibility/planning only until separately approved and secured.
 
-## UI Decisions
+## OPEN QUESTIONS
 
-- Quiet Luxury AI OS.
-- Current Vercel dashboard redesign is the primary interaction reference, not a branding or component source.
-- JARVIS-specific branding.
-- Restrained visual language.
-- Realistic data density.
-- Explicit loading, unavailable, empty, and error states.
+Authentication provider, database implementation, AI provider, STT provider, TTS provider, integration priority, production deployment, retention policy, and recovery/dual-approval design remain open. Do not invent answers. No credentials, payment controls, voice, or real OAuth implementation are present unless verified in source.
 
-## Known Fixes
+## Working method
 
-- **React 19 JSX namespace compatibility:** use `React.ReactElement` where required; do not rely on removed/global JSX namespace behavior.
-- **CSS import:** `frontend/src/styles/index.css` must use CSS `@import`, not JavaScript import syntax.
-
-These fixes apply only where the corresponding files exist; verify the actual tree before editing.
-
-## Lessons
-
-AI coding sessions must inspect first, modify only the requested batch, run typecheck/build, review architectural impact, and avoid unrelated refactors. Preserve useful existing documentation and user work.
-
-## Future Decisions
-
-Not finalized:
-
-- authentication provider
-- database implementation
-- AI provider
-- STT provider
-- TTS provider
-- real integrations
-- production deployment
-
-Do not invent decisions for these items. Record a decision only after it is explicitly selected, documented, and implemented in an approved batch.
+AI sessions inspect first, change only the requested batch, preserve untracked/user work, avoid destructive commands, validate relevant checks, review architectural impact, and report exactly what changed.

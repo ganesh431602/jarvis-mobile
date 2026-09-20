@@ -1,62 +1,39 @@
-# JARVIS Engineering Rules
+# JARVIS Engineering and Security Rules
 
-This is the non-negotiable rulebook for humans and AI coding agents.
+These rules are authoritative for humans and AI coding agents.
 
-## General AI coding rules
+## Engineering
 
-- Inspect before modifying and preserve existing work.
-- Never rewrite working modules unnecessarily.
-- Make small, isolated changes in the requested batch.
-- Prefer existing dependencies; justify any new library before adding it.
-- Do not duplicate abstractions; follow repository naming conventions.
-- Keep modules cohesive, APIs typed, and dependencies acyclic.
-- Validate changes before declaring completion.
+Inspect before modifying. Preserve existing work. Make small isolated changes, avoid unrelated formatting/refactors, prefer existing dependencies, keep APIs typed, and validate before claiming completion. Frontend never accesses the database directly. Backend authorization is authoritative.
 
-## Security rules
+## Authorization and agents
 
-The authorization decision is:
-
-```text
-Identity + Role + Permission + Resource Scope + Agent Risk Ceiling
-+ Lock State + Risk Policy + Approval = ALLOW / DENY
-```
-
-- Backend is authoritative.
-- Unknown permissions and scopes default to deny.
-- Unknown risk is CRITICAL.
+- Default deny unknown permissions, scopes, actions, and identities.
+- Apply least privilege and server-side authorization.
 - AI output can never authorize itself.
-- Agents have independent identity and never inherit OWNER or ADMIN authority.
-- High-risk and critical actions require approval.
-- Emergency LOCK ALL is checked before side effects; lock failure fails closed.
+- Agents have independent identity and never inherit Owner/Admin privileges.
+- High/Critical actions require approval unless explicitly allowed by policy.
+- Unknown risk becomes Critical.
+- LOCK ALL blocks side effects and fails closed; check it server-side immediately before execution.
 - Approval never overrides an active lock.
-- Agents cannot modify their own security restrictions.
-- Unknown actions are blocked.
+- Approval is scoped, expiring, parameter-bound, single-use, and replay-protected.
 
-## Approval rules
+## Secrets and providers
 
-Approvals are scoped, expiring, parameter-bound, single-use, and replay-protected. Record actor, action, resource, scope, parameter hash, risk, policy version, creation time, expiry, reviewer, decision, and reason. Execution must re-check policy and lock state.
+Never put secrets in frontend code, logs, Git, URLs, screenshots, ordinary database JSONB, or user-facing errors. Service-role credentials are server-side only. Do not hardcode credentials. Do not use provider SDKs directly in business/domain logic; use repository/provider adapters. The tool allowlist exists outside the model.
 
-## Secrets rules
+## Input and operations security
 
-Never commit secrets, put secrets in the frontend, log secrets, place them in screenshots or URLs, put credentials into ordinary JSONB, or expose Supabase service-role credentials to clients.
+Validate all input server-side. Protect against injection, IDOR, unsafe file uploads, replay, and unauthorized privilege changes. Use strict CORS/security headers and maintain rate-limiting readiness. Sensitive operations and lock/approval decisions must be audited. Use official or authorized APIs and adapters only; no hacking, reverse engineering, circumvention, or abuse of third-party services.
 
-## Error handling
+## Errors and observability
 
-Use typed errors, centralized error handling, safe user-facing messages, structured server logs, and correlation/request IDs. Never expose stack traces, provider secrets, database credentials, raw SQL errors, or unnecessary internal authorization details to users.
+Use typed errors, centralized handling, correlation IDs, structured logs, and safe production messages. Do not expose stack traces, credentials, raw SQL, or unnecessary internal authorization details. Preserve already-loaded data when refresh fails.
 
-## UI data-state rules
+## UI data integrity
 
-Every async feature distinguishes:
+Distinguish `LOADING`, `EMPTY`, `UNAVAILABLE`, `ERROR`, disabled, focus, pressed, and hover states. Never fabricate revenue, activity, agents, tasks, approvals, AI usage, or metrics.
 
-| State | Meaning | Required behavior |
-|---|---|---|
-| `LOADING` | Request in progress | Realistic skeleton; no fake values |
-| `UNAVAILABLE` | Source/capability is not connected or implemented | Muted explanation and optional setup; not an error |
-| `EMPTY` | Feature works but has zero records | Normal empty state with contextual next action |
-| `ERROR` | Request attempted and failed | Human-readable message, retry where appropriate, preserve loaded data |
+## Changes and Git
 
-Never fabricate revenue, activity, agents, tasks, approvals, system status, AI usage, or metrics.
-
-## Git rules
-
-Use small commits and one logical batch per commit. Explain breaking changes, do not modify unrelated files, and never overwrite user work without inspection.
+One logical batch per commit. Explain breaking changes. Do not modify package/config/source files for a documentation-only task. Never use destructive repository commands or overwrite user work without inspection. Do not weaken security for convenience.
