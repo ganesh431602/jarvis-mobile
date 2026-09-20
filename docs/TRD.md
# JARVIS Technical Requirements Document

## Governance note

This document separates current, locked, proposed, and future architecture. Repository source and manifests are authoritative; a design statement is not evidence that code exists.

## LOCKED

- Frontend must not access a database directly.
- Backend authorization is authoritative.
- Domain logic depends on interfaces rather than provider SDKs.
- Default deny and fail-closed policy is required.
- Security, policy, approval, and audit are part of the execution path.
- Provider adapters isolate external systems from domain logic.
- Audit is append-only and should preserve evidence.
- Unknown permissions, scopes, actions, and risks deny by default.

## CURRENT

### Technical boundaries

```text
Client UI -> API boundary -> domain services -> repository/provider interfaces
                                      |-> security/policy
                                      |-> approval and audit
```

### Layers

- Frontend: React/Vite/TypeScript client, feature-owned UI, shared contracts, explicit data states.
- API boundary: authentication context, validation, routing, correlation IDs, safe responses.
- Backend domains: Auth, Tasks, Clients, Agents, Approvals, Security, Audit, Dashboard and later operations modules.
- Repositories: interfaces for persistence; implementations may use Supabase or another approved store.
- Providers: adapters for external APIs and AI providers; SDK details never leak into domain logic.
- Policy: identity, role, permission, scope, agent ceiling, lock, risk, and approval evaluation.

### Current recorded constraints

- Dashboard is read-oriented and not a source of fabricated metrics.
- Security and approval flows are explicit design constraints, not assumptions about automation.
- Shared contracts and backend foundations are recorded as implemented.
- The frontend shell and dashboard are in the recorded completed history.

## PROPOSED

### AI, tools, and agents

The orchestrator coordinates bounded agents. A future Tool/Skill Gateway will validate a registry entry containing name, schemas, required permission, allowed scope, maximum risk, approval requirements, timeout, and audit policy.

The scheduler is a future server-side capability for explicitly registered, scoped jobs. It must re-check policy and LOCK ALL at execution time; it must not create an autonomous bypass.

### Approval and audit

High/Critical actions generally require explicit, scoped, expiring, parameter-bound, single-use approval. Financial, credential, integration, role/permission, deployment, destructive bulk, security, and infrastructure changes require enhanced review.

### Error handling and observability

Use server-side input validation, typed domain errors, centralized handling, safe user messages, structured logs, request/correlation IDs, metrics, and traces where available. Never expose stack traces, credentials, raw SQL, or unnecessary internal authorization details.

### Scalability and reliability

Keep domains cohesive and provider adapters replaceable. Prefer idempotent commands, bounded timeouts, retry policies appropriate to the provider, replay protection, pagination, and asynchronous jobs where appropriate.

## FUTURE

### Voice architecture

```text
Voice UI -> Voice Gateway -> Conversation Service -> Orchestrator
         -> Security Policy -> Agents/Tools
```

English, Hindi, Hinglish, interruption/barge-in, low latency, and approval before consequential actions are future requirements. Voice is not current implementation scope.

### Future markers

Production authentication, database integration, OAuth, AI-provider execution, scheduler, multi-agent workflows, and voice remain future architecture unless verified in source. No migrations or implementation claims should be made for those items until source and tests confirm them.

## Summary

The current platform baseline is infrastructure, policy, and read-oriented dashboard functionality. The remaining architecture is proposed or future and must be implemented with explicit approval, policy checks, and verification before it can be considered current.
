@@ -1,0 +1,116 @@
+# JARVIS Product Requirements Document
+
+## Governance note
+
+This document is the product governance baseline for JARVIS. It is intentionally split into status categories so that current, locked, proposed, and future scope remain distinct.
+
+- LOCKED: invariants that are non-negotiable and already reflected in repo guidance.
+- CURRENT: verified scope already represented in the project history and implementation state.
+- PROPOSED: planned work that is in design or backlog and not yet proven in source.
+- FUTURE: out-of-scope or intentionally deferred capabilities that must not be claimed as implemented.
+
+## LOCKED
+
+- JARVIS is a modular, mobile-first AI business operating system for founders, operators, and small businesses.
+- Security and least privilege are authoritative.
+- AI is functionality, not decoration.
+- Backend authorization is authoritative; frontend never accesses the database directly.
+- Default deny, least privilege, and fail-closed policy apply.
+- High and critical actions require approval unless an explicit policy permits otherwise.
+- Unknown risk is treated as Critical.
+- LOCK ALL blocks side effects and fails closed.
+- No fabricated data; read-oriented dashboard states remain distinct: LOADING, EMPTY, UNAVAILABLE, ERROR, DATA.
+- Provider SDKs remain behind adapters and are never treated as business logic.
+- Android/Kotlin remains isolated; web implementation batches do not rewrite the Android app.
+
+## CURRENT
+
+### Users and use cases
+
+| User | Primary use |
+| --- | --- |
+| Owner / founder | See business state, manage work, approve risk, configure policy |
+| Admin | Administer authorized users and operational configuration |
+| Operator | Execute permitted workflows within assigned scope |
+| Viewer | Read permitted operational information |
+| AI agent | Independent system actor with explicit identity, scope, permissions, and risk ceiling; never a human user |
+
+### Core modules
+
+- Core: Auth, Dashboard, Tasks, Clients, Agents, Approvals, Security, Audit.
+- Operations: Communications, Content, Finance, Integrations.
+- AI: Orchestrator, Memory, Tool Gateway, Voice, Agent Registry.
+
+### Recorded implementation baseline
+
+The repo history records these completed foundation batches:
+
+- Foundation/docs
+- Shared contracts
+- Backend foundation
+- Supabase adapter boundary
+- Security foundation
+- Agent/task foundation
+- Clients/dashboard foundation
+- Frontend shell
+- Dashboard batch (TypeScript typecheck and Vite production build passed)
+
+This does not mean future modules are complete. It means the repository intentionally records a verified baseline that must remain authoritative.
+
+## PROPOSED
+
+### Planned MVP requirements
+
+1. Authentication foundation and session boundaries.
+2. Read-oriented dashboard.
+3. Security Center with security state and emergency LOCK ALL controls.
+4. Roles, permissions, resource scopes, and agent risk ceilings.
+5. Approval Center for consequential actions.
+6. Append-only Audit Log.
+7. Agent Registry for the planned agents.
+8. Task and Client foundations.
+9. Integration inventory and Finance visibility foundations.
+10. AI usage visibility and configuration foundations.
+11. Responsive mobile-first UI with polished desktop behavior.
+12. Source-of-truth documentation and AI coding guidance.
+
+### Planned agent registry
+
+The planned registry contains CEO/Orchestrator, Business, Client, Developer, QA, Sales, Finance, Email, Content, Creator Revenue, Portfolio, Security, and Analytics. Registry presence is not proof of execution.
+
+### Planned roadmap themes
+
+- Dashboard polish and state fidelity.
+- Informational and operational modules.
+- Hardening, verification, and production boundaries.
+- Production auth and DB integration.
+- Authorized external integrations.
+- Provider-backed AI execution with tool allowlists and approval.
+- Scheduler and multi-agent workflow coordination.
+
+## FUTURE
+
+The following are future or explicitly deferred items and must not be claimed as implemented:
+
+- Real provider-backed AI execution.
+- Real OAuth or credential-based integration flows.
+- Production authentication and session management.
+- Production database integration and migration execution.
+- Scheduler-driven autonomous jobs.
+- Multi-agent workflows with bounded delegation.
+- Voice-first UX and conversation gateway.
+- External finance execution such as bank login, UPI, ATM PIN, OTP handling, or payment transfers.
+
+Unless verified in source, no real AI execution, payments, transfers, OAuth integrations, or voice features are implemented. Finance remains limited to verified visibility and planning data.
+
+## Non-functional requirements
+
+- Security and least privilege are authoritative.
+- APIs are typed and observable.
+- Sensitive actions are auditable and approval-gated.
+- UI is accessible, responsive, and honest about data state.
+- Documentation must remain source-of-truth and must not be used to infer feature completion.
+
+## Source references
+
+This file is aligned to the repository’s governing documentation and the current recorded project state. Future capability must be validated against source before being claimed complete.

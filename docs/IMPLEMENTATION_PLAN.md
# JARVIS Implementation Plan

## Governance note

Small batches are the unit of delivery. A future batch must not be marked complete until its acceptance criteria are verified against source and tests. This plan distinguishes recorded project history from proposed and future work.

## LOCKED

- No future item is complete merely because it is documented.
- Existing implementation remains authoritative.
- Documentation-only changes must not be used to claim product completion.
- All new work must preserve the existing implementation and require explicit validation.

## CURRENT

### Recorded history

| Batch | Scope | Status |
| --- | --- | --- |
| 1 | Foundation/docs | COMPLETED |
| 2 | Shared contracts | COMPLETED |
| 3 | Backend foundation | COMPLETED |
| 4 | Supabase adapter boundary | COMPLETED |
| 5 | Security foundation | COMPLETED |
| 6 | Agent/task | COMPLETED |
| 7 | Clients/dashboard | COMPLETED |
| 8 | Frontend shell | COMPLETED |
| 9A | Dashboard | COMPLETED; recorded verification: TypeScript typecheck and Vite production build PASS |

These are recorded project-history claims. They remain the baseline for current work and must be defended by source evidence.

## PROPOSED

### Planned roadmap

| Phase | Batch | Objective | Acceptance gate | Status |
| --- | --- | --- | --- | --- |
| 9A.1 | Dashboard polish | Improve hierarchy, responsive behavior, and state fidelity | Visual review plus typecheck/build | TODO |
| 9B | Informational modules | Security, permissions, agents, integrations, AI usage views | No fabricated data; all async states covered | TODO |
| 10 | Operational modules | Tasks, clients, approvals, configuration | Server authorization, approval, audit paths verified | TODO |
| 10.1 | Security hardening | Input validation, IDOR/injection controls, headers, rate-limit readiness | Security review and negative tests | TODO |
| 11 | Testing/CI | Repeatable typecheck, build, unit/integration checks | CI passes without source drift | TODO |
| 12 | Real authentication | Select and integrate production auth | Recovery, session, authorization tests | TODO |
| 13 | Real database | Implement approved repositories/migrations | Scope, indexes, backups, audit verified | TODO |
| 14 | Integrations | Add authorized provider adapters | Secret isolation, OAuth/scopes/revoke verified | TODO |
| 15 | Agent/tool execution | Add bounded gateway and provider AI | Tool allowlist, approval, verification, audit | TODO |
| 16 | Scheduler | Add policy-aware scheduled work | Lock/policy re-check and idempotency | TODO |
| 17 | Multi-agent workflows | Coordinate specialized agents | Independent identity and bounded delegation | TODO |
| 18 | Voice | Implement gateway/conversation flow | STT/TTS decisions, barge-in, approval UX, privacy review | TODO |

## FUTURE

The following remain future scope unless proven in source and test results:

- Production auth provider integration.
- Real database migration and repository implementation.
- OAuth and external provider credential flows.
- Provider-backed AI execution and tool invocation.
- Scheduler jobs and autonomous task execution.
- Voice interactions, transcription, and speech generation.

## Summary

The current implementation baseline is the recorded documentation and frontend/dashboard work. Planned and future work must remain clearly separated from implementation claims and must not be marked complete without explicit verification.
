@@ -1,0 +1,54 @@
+# JARVIS Planned Database Schema
+
+## Governance note
+
+This is a planned domain model, not a migration. It must be reconciled with actual implementation before database work begins. Use UUID primary keys and UTC timestamps unless an approved implementation standard says otherwise.
+
+## LOCKED
+
+- No database work should be treated as complete without explicit implementation verification.
+- Frontend code must not access the database directly.
+- Persistence decisions must remain behind repository interfaces.
+- Sensitive tokens remain in a secret manager, not in application JSON or UI.
+- Audit records must remain append-only and reviewable.
+
+## CURRENT
+
+No production database schema is currently implemented in this repository. The existing repo records backend and adapter boundaries, but not a live migration or verified database implementation.
+
+## PROPOSED
+
+### Shared conventions
+
+Every mutable domain table should have `created_at`, `updated_at`, and an appropriate owner/scope. Use foreign keys, tenant/resource scope checks, soft deletion only where justified, and append-only audit records.
+
+### Entities
+
+| Entity | Purpose and important fields | Keys/indexes/security/audit |
+| --- | --- | --- |
+| `users` | Human identity: `id`, `email`, `display_name`, `role`, `status` | PK `id`; unique email; index role/status; credentials managed by auth provider; changes audited |
+| `sessions` | Auth sessions: `id`, `user_id`, `expires_at`, `revoked_at`, `device_metadata` | PK `id`, FK user; index user/expiry; never store raw secrets; revocation audited |
+| `agents` | Independent actors: `id`, `name`, `agent_type`, `enabled`, `risk_ceiling`, `scope` | PK `id`; index enabled/type; no human privilege inheritance; changes audited |
+| `permissions` | Permission catalog: `id`, `name`, `resource`, `action`, `risk` | PK `id`; unique name; unknown permissions deny; catalog changes audited |
+| `agent_permissions` | Agent grants: `agent_id`, `permission_id`, `scope`, `expires_at` | Composite PK; FKs agents/permissions; index agent/scope; grant/revoke audited |
+| `tasks` | Work items: `id`, `title`, `status`, `priority`, `assignee_user_id`, `assignee_agent_id`, `scope` | PK; FKs nullable assignees; indexes status/scope/assignee; transitions audited |
+| `clients` | Client records: `id`, `name`, `status`, `owner_user_id`, `scope` | PK; owner FK; indexes owner/status; sensitive access audited |
+| `projects` | Optional grouping: `id`, `client_id`, `name`, `status`, `scope` | PK, client FK; index client/status; changes audited |
+| `approvals` | Decision envelope: `id`, `actor_id`, `action`, `resource`, `scope`, `parameter_hash`, `risk`, `policy_version`, `expires_at`, `reviewer_id`, `decision`, `used_at` | PK; indexes pending and resource scope; approvals are replay-protected |
+| `audit_events` | Append-only event: `id`, `actor_type`, `actor_id`, `action`, `resource`, `decision`, `risk`, `correlation_id`, `metadata_redacted`, `created_at` | PK; indexes actor/resource/time; append-only and reviewable |
+| `integrations` | Provider connection metadata: `id`, `provider`, `status`, `scope`, `account_ref`, `last_sync_at` | PK; unique provider/account/scope; tokens in secret manager; connect/revoke audited |
+| `finance_records` | Verified visibility records: `id`, `source`, `kind`, `amount`, `currency`, `occurred_at`, `status`, `scope` | PK; indexes source/time/status; no PIN/OTP/bank credentials; implementation requires review |
+| `ai_usage` | Verified usage: `id`, `provider`, `model_ref`, `request_count`, `input_units`, `output_units`, `cost_estimate`, `period` | PK; indexes provider/period; provider data only; no prompt secrets stored |
+| `security_locks` | LOCK ALL scope: `id`, `scope_type`, `scope_ref`, `action`, `active`, `reason`, `created_by`, `expires_at`, `released_by` | PK; active-scope index; server-side check; lock/unlock audited |
+
+Additional entities require a written justification in the implementation plan and a security review before implementation.
+
+## FUTURE
+
+- Real migrations and production database work remain future until verified in source and CI.
+- Token storage, OAuth state, and secret handling must remain in server-side secret infrastructure.
+- Database-backed multi-agent workflows and scheduler jobs stay future until implementation is explicit and reviewable.
+
+## Summary
+
+The schema above is a governance plan, not an active migration. The current repo does not provide proof of live database implementation. All database scope must remain proposed until source and tests confirm otherwise.

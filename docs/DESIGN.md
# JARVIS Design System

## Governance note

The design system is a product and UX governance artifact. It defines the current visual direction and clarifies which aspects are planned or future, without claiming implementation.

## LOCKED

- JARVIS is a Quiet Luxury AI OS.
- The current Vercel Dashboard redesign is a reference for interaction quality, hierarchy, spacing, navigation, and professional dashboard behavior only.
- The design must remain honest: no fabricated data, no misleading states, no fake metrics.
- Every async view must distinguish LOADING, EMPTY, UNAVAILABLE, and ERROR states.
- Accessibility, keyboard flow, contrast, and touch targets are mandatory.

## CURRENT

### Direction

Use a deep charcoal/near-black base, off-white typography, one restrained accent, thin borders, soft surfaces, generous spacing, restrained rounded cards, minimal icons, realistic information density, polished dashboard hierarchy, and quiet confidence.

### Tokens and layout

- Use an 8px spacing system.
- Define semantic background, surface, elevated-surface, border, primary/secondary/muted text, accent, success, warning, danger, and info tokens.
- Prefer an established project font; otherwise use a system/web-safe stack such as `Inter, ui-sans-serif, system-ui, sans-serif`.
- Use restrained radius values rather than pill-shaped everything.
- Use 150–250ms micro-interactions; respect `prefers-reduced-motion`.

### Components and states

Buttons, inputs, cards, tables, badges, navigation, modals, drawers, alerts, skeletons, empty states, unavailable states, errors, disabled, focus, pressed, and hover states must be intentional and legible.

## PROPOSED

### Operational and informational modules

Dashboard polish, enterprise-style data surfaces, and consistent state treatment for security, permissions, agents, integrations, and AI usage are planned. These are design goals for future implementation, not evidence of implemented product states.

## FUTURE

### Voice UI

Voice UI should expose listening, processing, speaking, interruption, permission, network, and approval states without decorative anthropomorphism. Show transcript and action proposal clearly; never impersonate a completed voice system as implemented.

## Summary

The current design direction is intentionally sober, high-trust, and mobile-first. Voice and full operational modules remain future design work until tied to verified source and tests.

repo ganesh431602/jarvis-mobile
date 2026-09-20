@@ -1,0 +1,94 @@
+# JARVIS Application Flows
+
+## Governance note
+
+Flows describe intended behavior; current implementation must be verified before being claimed as complete. This document distinguishes current flows from proposed and future flows.
+
+## LOCKED
+
+- Security policy is evaluated before side effects.
+- Server-side LOCK ALL is checked immediately before execution.
+- AI output cannot authorize itself.
+- Authorization is evaluated server-side for every protected request.
+- No fabricated business data may be displayed.
+
+## CURRENT
+
+### Authentication
+
+```text
+Client -> authentication boundary -> identity/session validation -> authorized shell
+```
+
+Authentication establishes identity only. Authorization is evaluated server-side for every protected request.
+
+### Dashboard
+
+```text
+Open dashboard -> request read model -> LOADING -> data / EMPTY / UNAVAILABLE / ERROR
+```
+
+The dashboard is read-oriented and must never fabricate metrics, tasks, revenue, agents, or system status.
+
+### Security Center and LOCK ALL
+
+Security Center shows policy, lock, permission, and audit-relevant state. LOCK ALL may be global, module, agent, resource, or action scoped. Before every consequential side effect, the server checks the active lock state and policy.
+
+### Approvals
+
+```text
+Proposed action -> risk/policy evaluation -> approval request -> human review
+-> approve/deny/expire -> re-check lock and policy -> execute or block -> audit
+```
+
+Approval is scoped, expiring, parameter-bound, single-use, and replay-protected.
+
+### Agents
+
+Registry view shows the planned identities and their enabled state, permissions, scope, and risk ceiling. A registry entry does not imply execution. Agents never inherit Owner/Admin privileges.
+
+### Tasks
+
+Create or receive task -> validate scope -> assign permitted human/agent -> update lifecycle -> audit material changes -> report state. Future automation must pass policy before side effects.
+
+### Clients
+
+Open client list -> load permitted records -> view client context -> create/update within scope -> audit changes. Sensitive client information follows least privilege and safe error rules.
+
+### Finance
+
+Finance currently means foundation and visibility planning only. No bank login, UPI PIN, ATM PIN, OTP, credentials, payment provider execution, or automatic money transfer is included.
+
+### Integrations
+
+Integration Center displays provider availability and connection state. GitHub, Gmail, YouTube, Instagram, LinkedIn, cloud storage, and payment systems are future or placeholder integrations. No credentials should be displayed or stored in frontend code.
+
+### AI usage
+
+Usage view reports only verified provider/request data. If no source is connected, show UNAVAILABLE—not invented usage. Future provider calls pass through adapters and policy; secrets remain server-side only.
+
+## PROPOSED
+
+### Future agent execution
+
+```text
+Goal -> Plan -> Tool selection -> Permission/risk check -> Approval
+-> Execute -> Verify -> Audit -> Report
+```
+
+The model may propose a plan and tool, but the policy layer and human approval control execution.
+
+## FUTURE
+
+### Future voice flow
+
+```text
+Speech-to-text -> Conversation -> Intent/security -> Answer or Action Proposal
+-> Approval if required -> Execute -> Text-to-speech
+```
+
+Voice UI may be mobile or web. It must support future English, Hindi, Hinglish, interruption, low latency, and explicit approval. Voice is not current implementation scope and should not be implemented until approved.
+
+## Summary
+
+Current recorded flows are security, dashboard, authorization, approval, and read-oriented operational surfaces. The remaining execution, AI-provider, scheduler, and voice flows remain proposed or future until source and tests verify them.
