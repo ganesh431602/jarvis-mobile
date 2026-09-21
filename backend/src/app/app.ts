@@ -6,6 +6,7 @@ import { notFoundHandler } from "../shared/middleware/error-handler.js";
 import { productionErrorHandler } from "../shared/middleware/production-error-handler.js";
 import { requireJsonContentType, validateRequestBodySize } from "../shared/middleware/request-validation.js";
 import { healthRouter } from "../modules/health/health.router.js";
+import { dashboardRouter } from "../modules/dashboard/dashboard.router.js";
 import { globalRateLimiter } from "./rate-limit.js";
 import { ssrfProtection } from "../shared/middleware/ssrf-protection.js";
 import { securityRequestBoundary } from "../shared/middleware/security-request-boundary.js";
@@ -79,6 +80,7 @@ export const createApp = (): Express => {
   app.use(requestContext);
 
   app.use(`${config.apiPrefix}/health`, healthRouter);
+  app.use(`${config.apiPrefix}/dashboard`, dashboardRouter);
   app.use(notFoundHandler);
   app.use(productionErrorHandler);
 
