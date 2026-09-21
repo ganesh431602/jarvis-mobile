@@ -2,6 +2,30 @@
   "name": "@jarvis/shared",
   "private": true,
   "type": "module",
-  "exports": { ".": "./index.ts", "./contracts": "./contracts/index.ts", "./enums": "./enums/index.ts", "./types": "./types/security.ts", "./validation": "./validation/index.ts" },
-  "scripts": { "typecheck": "tsc --noEmit" }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "import": "./dist/contracts/index.js"
+    },
+    "./enums": {
+      "types": "./dist/enums/index.d.ts",
+      "import": "./dist/enums/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/security.d.ts",
+      "import": "./dist/types/security.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  }
 }
