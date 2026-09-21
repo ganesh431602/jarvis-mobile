@@ -1,0 +1,78 @@
+﻿name: JARVIS Security
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  security:
+    name: Security checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+
+      - name: Typecheck backend
+        run: npm run typecheck --workspace=@jarvis/backend
+
+      - name: Typecheck shared
+        run: npm run typecheck --workspace=@jarvis/shared
+
+      - name: Typecheck frontend
+        run: npm run typecheck --workspace=@jarvis/frontend
+
+      - name: Build backend
+        run: npm run build --workspace=@jarvis/backend
+
+      - name: Build frontend
+        run: npm run build --workspace=@jarvis/frontend
+
+      - name: Git secret-pattern scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -nEI \
+            '-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|Bearer[[:space:]]+[A-Za-z0-9._-]{20,}' \
+            -- ':!package-lock.json' ':!docs/SECURITY_BASELINE.md'; then
+            echo "Potential secret detected in tracked source."
+            exit 1
+          fi
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4

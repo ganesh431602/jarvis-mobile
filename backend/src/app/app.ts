@@ -7,6 +7,7 @@ import { requireJsonContentType, validateRequestBodySize } from "../shared/middl
 import { healthRouter } from "../modules/health/health.router.js";
 import { globalRateLimiter } from "./rate-limit.js";
 import { ssrfProtection } from "../shared/middleware/ssrf-protection.js";
+import { securityRequestBoundary } from "../shared/middleware/security-request-boundary.js";
 
 export const createApp = (): Express => {
   const app = express();
@@ -32,25 +33,36 @@ export const createApp = (): Express => {
     }),
   );
 
+  app.use(securityRequestBoundary);
+
   app.use((req, res, next) => {
     const origin = req.headers.origin;
 
-    if (origin && config.corsOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Vary", "Origin");
-      res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Request-Id");
-      res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-    }
-
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-
-    if (req.method === "OPTIONS") {
-      if (!origin || !config.corsOrigins.includes(origin)) {
-        res.status(403).end();
+    if (origin) {
+      if (!config.corsOrigins.includes(origin)) {
+        res.status(403).json({ error: "Origin not allowed." });
         return;
       }
 
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, X-Request-Id",
+      );
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+      );
+    }
+
+    res.setHeader(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()",
+    );
+
+    if (req.method === "OPTIONS") {
       res.status(204).end();
       return;
     }
