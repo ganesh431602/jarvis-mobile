@@ -1,8 +1,9 @@
-﻿import express, { type Express } from "express";
+import express, { type Express } from "express";
 import helmet from "helmet";
 import { config } from "./config.js";
 import { requestContext } from "../shared/middleware/request-context.js";
-import { errorHandler, notFoundHandler } from "../shared/middleware/error-handler.js";
+import { notFoundHandler } from "../shared/middleware/error-handler.js";
+import { productionErrorHandler } from "../shared/middleware/production-error-handler.js";
 import { requireJsonContentType, validateRequestBodySize } from "../shared/middleware/request-validation.js";
 import { healthRouter } from "../modules/health/health.router.js";
 import { globalRateLimiter } from "./rate-limit.js";
@@ -79,7 +80,7 @@ export const createApp = (): Express => {
 
   app.use(`${config.apiPrefix}/health`, healthRouter);
   app.use(notFoundHandler);
-  app.use(errorHandler);
+  app.use(productionErrorHandler);
 
   return app;
 };
