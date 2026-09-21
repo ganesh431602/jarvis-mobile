@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+﻿import { randomUUID } from "node:crypto";
 import { AgentRiskLevel, AgentStatus, PermissionKey, UserRole } from "@jarvis/shared";
 import type { Agent, AgentCapability } from "@jarvis/shared";
 import type { AgentRiskCeiling, ResourceScope } from "@jarvis/shared";
@@ -26,21 +26,20 @@ const ceiling = (maximumRisk: AgentRiskLevel): AgentRiskCeiling => ({ maximumRis
 const capability = (key: PermissionKey): AgentCapability => ({ key });
 
 const definitions: ReadonlyArray<Pick<RegisteredAgent, "id" | "name" | "department" | "description" | "permissions" | "riskCeiling">> = [
-  ["ceo-orchestrator", "CEO / Orchestrator", "orchestration", "Coordinates approved business workflows.", [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["business", "Business", "business", "Business planning and analysis.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.LOW)],
-  ["client", "Client", "client", "Client workflow assistance.", [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["developer", "Developer", "engineering", "Development planning assistance.", [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["qa", "QA", "engineering", "Quality assurance planning assistance.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["sales", "Sales", "sales", "Sales planning assistance.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.LOW)],
-  ["finance", "Finance", "finance", "Informational finance analysis only.", [PermissionKey.READ], ceiling(AgentRiskLevel.LOW)],
-  ["email", "Email", "communications", "Draft communication assistance only.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["content", "Content", "content", "Content drafting assistance.", [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], ceiling(AgentRiskLevel.MEDIUM)],
-  ["creator-revenue", "Creator Revenue", "revenue", "Informational creator revenue analysis.", [PermissionKey.READ], ceiling(AgentRiskLevel.LOW)],
-  ["portfolio", "Portfolio", "portfolio", "Portfolio planning assistance.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.LOW)],
-  ["security", "Security", "security", "Security analysis assistance without policy control.", [PermissionKey.READ], ceiling(AgentRiskLevel.MEDIUM)],
-  ["analytics", "Analytics", "analytics", "Analytics and reporting assistance.", [PermissionKey.READ, PermissionKey.CREATE], ceiling(AgentRiskLevel.LOW)],
-].map(([id, name, department, description, permissions, riskCeiling]) => ({ id, name, department, description, permissions, riskCeiling }));
-
+  { id: "ceo-orchestrator", name: "CEO / Orchestrator", department: "orchestration", description: "Coordinates approved business workflows.", permissions: [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "business", name: "Business", department: "business", description: "Business planning and analysis.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+  { id: "client", name: "Client", department: "client", description: "Client workflow assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "developer", name: "Developer", department: "engineering", description: "Development planning assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "qa", name: "QA", department: "engineering", description: "Quality assurance planning assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "sales", name: "Sales", department: "sales", description: "Sales planning assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+  { id: "finance", name: "Finance", department: "finance", description: "Informational finance analysis only.", permissions: [PermissionKey.READ], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+  { id: "email", name: "Email", department: "communications", description: "Draft communication assistance only.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "content", name: "Content", department: "content", description: "Content drafting assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE, PermissionKey.UPDATE], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "creator-revenue", name: "Creator Revenue", department: "revenue", description: "Informational creator revenue analysis.", permissions: [PermissionKey.READ], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+  { id: "portfolio", name: "Portfolio", department: "portfolio", description: "Portfolio planning assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+  { id: "security", name: "Security", department: "security", description: "Security analysis assistance without policy control.", permissions: [PermissionKey.READ], riskCeiling: ceiling(AgentRiskLevel.MEDIUM) },
+  { id: "analytics", name: "Analytics", department: "analytics", description: "Analytics and reporting assistance.", permissions: [PermissionKey.READ, PermissionKey.CREATE], riskCeiling: ceiling(AgentRiskLevel.LOW) },
+];
 export class AgentRegistry {
   constructor(private readonly repository: AgentRepository = new InMemoryAgentRepository()) {
     if (repository.list().length === 0) {
@@ -80,3 +79,4 @@ export class AgentRegistry {
     return this.repository.save({ id: randomUUID(), name, department: "custom", description: "User-created placeholder agent.", status: AgentStatus.INACTIVE, enabled: false, permissions: [PermissionKey.READ], riskCeiling: ceiling(AgentRiskLevel.LOW), resourceScope: {}, createdAt: timestamp, updatedAt: timestamp });
   }
 }
+
