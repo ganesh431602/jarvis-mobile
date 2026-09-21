@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { PermissionKey, TaskPriority, TaskStatus } from "@jarvis/shared";
+import { AgentRiskLevel, PermissionKey, TaskPriority, TaskStatus } from "@jarvis/shared";
 import type { Task, TaskPriority as TaskPriorityType, TaskStatus as TaskStatusType } from "@jarvis/shared";
 import type { ActorRef, ResourceScope } from "@jarvis/shared";
 import { evaluateSecurityAction, type SecurityIdentity, type SecurityAction } from "../security/security-policy.js";

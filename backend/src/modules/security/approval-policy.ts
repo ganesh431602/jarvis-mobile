@@ -1,4 +1,4 @@
-import { ApprovalStatus, AgentRiskLevel, UserRole } from "@jarvis/shared";
+﻿import { ApprovalStatus, AgentRiskLevel, ApprovalRiskLevel, UserRole } from "@jarvis/shared";
 import type { Approval, ApprovalDecision, ResourceScope } from "@jarvis/shared";
 import type { AuthContext } from "../../shared/security/auth-context.js";
 
@@ -20,8 +20,9 @@ export class DefaultApprovalPolicy implements ApprovalPolicy {
   }
   validateExecution(approval: Approval, request: ApprovalExecutionRequest, now = new Date().toISOString()): boolean {
     if (approval.status !== ApprovalStatus.APPROVED || approval.expiresAt <= now || this.consumed.has(approval.id)) return false;
-    if (approval.requestedAction !== request.action || approval.resourceType !== request.resourceType || approval.resourceId !== request.resourceId || approval.policyVersion !== request.policyVersion || approval.parameterHash !== request.parameterHash || approval.riskLevel !== request.risk || JSON.stringify(approval.requestedScope ?? {}) !== JSON.stringify(request.scope ?? {})) return false;
+    if (approval.requestedAction !== request.action || approval.resourceType !== request.resourceType || approval.resourceId !== request.resourceId || approval.policyVersion !== request.policyVersion || approval.parameterHash !== request.parameterHash || approval.riskLevel !== ({ [AgentRiskLevel.LOW]: ApprovalRiskLevel.LOW, [AgentRiskLevel.MEDIUM]: ApprovalRiskLevel.MEDIUM, [AgentRiskLevel.HIGH]: ApprovalRiskLevel.HIGH, [AgentRiskLevel.CRITICAL]: ApprovalRiskLevel.CRITICAL } as const)[request.risk] || JSON.stringify(approval.requestedScope ?? {}) !== JSON.stringify(request.scope ?? {})) return false;
     this.consumed.add(approval.id);
     return true;
   }
 }
+
