@@ -1,0 +1,9 @@
+﻿{
+  "networkSecurity": {
+    "cleartextTrafficPermitted": false
+  },
+  "backup": {
+    "allowBackup": false,
+    "dataExtractionRules": true
+  }
+}
