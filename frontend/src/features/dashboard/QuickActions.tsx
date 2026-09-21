@@ -1,1 +1,2 @@
-export const QuickActions = (): JSX.Element => <section className="quick-actions"><p className="eyebrow">Quick actions</p><div><a className="button button-primary" href="/tasks">Create task</a><a className="button button-secondary" href="/approvals">Review approvals</a><a className="button button-secondary" href="/security">Open security</a></div></section>;
+import React from "react";
+export const QuickActions = (): React.ReactElement => <section className="quick-actions"><p className="eyebrow">Quick actions</p><div><a className="button button-primary" href="/tasks">Create task</a><a className="button button-secondary" href="/approvals">Review approvals</a><a className="button button-secondary" href="/security">Open security</a></div></section>;

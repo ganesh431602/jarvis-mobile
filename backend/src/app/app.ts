@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import helmet from "helmet";
 import { config } from "./config.js";
+import { createDashboardAuthentication } from "./dashboard-auth.js";
 import { requestContext } from "../shared/middleware/request-context.js";
 import { notFoundHandler } from "../shared/middleware/error-handler.js";
 import { productionErrorHandler } from "../shared/middleware/production-error-handler.js";
@@ -80,7 +81,11 @@ export const createApp = (): Express => {
   app.use(requestContext);
 
   app.use(`${config.apiPrefix}/health`, healthRouter);
-  app.use(`${config.apiPrefix}/dashboard`, dashboardRouter);
+  app.use(
+    `${config.apiPrefix}/dashboard`,
+    createDashboardAuthentication(),
+    dashboardRouter,
+  );
   app.use(notFoundHandler);
   app.use(productionErrorHandler);
 
