@@ -1,38 +1,43 @@
 ﻿import { InMemoryAuditEventRepository } from "./audit-event-repository.js";
-import { createAuditEvent, type AuditEvent } from "./audit-event.js";
+import { createAuditEvent } from "./audit-event.js";
 
 const repository = new InMemoryAuditEventRepository();
 
-repository.append(
-  createAuditEvent({
-    eventId: "event-1",
-    timestamp: "2030-01-01T00:00:00.000Z",
-    actorId: "agent-1",
-    actorType: "AGENT",
-    action: "deploy",
-    resourceType: "deployment",
-    resourceId: "deployment-1",
-    result: "SUCCEEDED",
-    risk: "HIGH",
-    policyVersion: "1",
-  }),
-);
+const event = createAuditEvent({
+  eventId: "event-1",
+  timestamp: "2030-01-01T00:00:00.000Z",
+  actorId: "agent-1",
+  actorType: "AGENT",
+  action: "deploy",
+  resourceType: "deployment",
+  resourceId: "deployment-1",
+  result: "SUCCEEDED",
+  risk: "HIGH",
+  policyVersion: "1",
+});
 
-const events = repository.list();
-
-if (events.length !== 1 || events[0]?.eventId !== "event-1") {
-  throw new Error("Audit event must be persisted.");
-}
+repository.append(event);
 
 try {
-  (events as AuditEvent[]).push(events[0]!);
-  throw new Error("Audit repository result must be immutable.");
+  repository.append(event);
+  throw new Error("Duplicate audit event must be rejected.");
 } catch (error) {
-  if (!(error instanceof TypeError)) {
+  if (!(error instanceof Error) || !error.message.includes("Duplicate")) {
     throw error;
   }
 }
 
 if (repository.list().length !== 1) {
-  throw new Error("Audit repository must remain append-only.");
+  throw new Error("Duplicate event must not be persisted.");
+}
+
+const second = createAuditEvent({
+  ...event,
+  eventId: "event-2",
+});
+
+repository.append(second);
+
+if (repository.list().length !== 2) {
+  throw new Error("Distinct audit events must both persist.");
 }

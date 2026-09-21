@@ -7,8 +7,14 @@ export interface AuditEventRepository {
 
 export class InMemoryAuditEventRepository implements AuditEventRepository {
   private readonly events: AuditEvent[] = [];
+  private readonly eventIds = new Set<string>();
 
   append(event: AuditEvent): void {
+    if (this.eventIds.has(event.eventId)) {
+      throw new Error("Duplicate audit event.");
+    }
+
+    this.eventIds.add(event.eventId);
     this.events.push(event);
   }
 
